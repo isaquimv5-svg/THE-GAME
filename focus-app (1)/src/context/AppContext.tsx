@@ -3,7 +3,7 @@ import { Task, PlanGoal, HabitsState, UserProfile, DayPerformance, PriorityLevel
 import { Storage } from '../utils/storage';
 import { getTodayDateString } from '../utils/date';
 
-export type TabType = 'today' | 'plan' | 'tasks' | 'habits' | 'monthly' | 'profile';
+export type TabType = 'today' | 'routine' | 'plan' | 'tasks' | 'habits' | 'monthly' | 'profile';
 
 interface AppContextType {
   activeTab: TabType;
