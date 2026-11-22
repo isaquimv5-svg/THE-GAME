@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Trash2, Calendar, Clock, Tag, Flag, AlertCircle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { PriorityLevel, TaskCategory } from '../../types';
+import { PriorityLevel, TaskCategory, TaskWorkspace } from '../../types';
 import { getTodayDateString } from '../../utils/date';
 
 const CATEGORIES: TaskCategory[] = [
@@ -15,6 +15,8 @@ const CATEGORIES: TaskCategory[] = [
 ];
 
 const PRIORITIES: PriorityLevel[] = ['Alta', 'Média', 'Baixa'];
+
+const WORKSPACES: TaskWorkspace[] = ['Geral', 'GF ATAKAREJO', 'MTR7 Imports', 'Pessoal'];
 
 export const TaskModal: React.FC = () => {
   const {
@@ -33,6 +35,7 @@ export const TaskModal: React.FC = () => {
   const [time, setTime] = useState('08:00');
   const [date, setDate] = useState(selectedDate || getTodayDateString());
   const [category, setCategory] = useState<TaskCategory>('Trabalho');
+  const [workspace, setWorkspace] = useState<TaskWorkspace>('Geral');
   const [priority, setPriority] = useState<PriorityLevel>('Média');
   const [recurring, setRecurring] = useState(false);
   const [isTopPriority, setIsTopPriority] = useState(false);
@@ -44,6 +47,7 @@ export const TaskModal: React.FC = () => {
       setTime(editingTask.time || '08:00');
       setDate(editingTask.date || selectedDate || getTodayDateString());
       setCategory(editingTask.category || 'Trabalho');
+      setWorkspace(editingTask.workspace || 'Geral');
       setPriority(editingTask.priority || 'Média');
       setRecurring(!!editingTask.recurring);
       setIsTopPriority(!!editingTask.isTopPriority);
@@ -53,6 +57,7 @@ export const TaskModal: React.FC = () => {
       setTime('09:00');
       setDate(selectedDate || getTodayDateString());
       setCategory('Trabalho');
+      setWorkspace('Geral');
       setPriority('Média');
       setRecurring(false);
       setIsTopPriority(false);
@@ -72,6 +77,7 @@ export const TaskModal: React.FC = () => {
         time,
         date,
         category,
+        workspace,
         priority,
         recurring,
         isTopPriority,
@@ -84,6 +90,7 @@ export const TaskModal: React.FC = () => {
         date,
         completed: false,
         category,
+        workspace,
         priority,
         recurring,
         isTopPriority,
@@ -104,7 +111,7 @@ export const TaskModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-sm rounded-[24px] bg-[#0B141B] border border-[rgba(120,160,190,0.18)] p-5 shadow-2xl relative">
+      <div className="w-full max-w-sm max-h-[90dvh] overflow-y-auto rounded-[24px] bg-[#0B141B] border border-[rgba(120,160,190,0.18)] p-5 shadow-2xl relative">
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-[rgba(120,160,190,0.1)]">
           <h2 className="text-base font-bold text-[#F7F9FC]">
@@ -176,6 +183,33 @@ export const TaskModal: React.FC = () => {
                 className="w-full bg-[#0D171F] border border-[rgba(120,160,190,0.18)] rounded-xl px-3 py-2 text-xs text-[#F7F9FC] focus:outline-none focus:border-[#299BFF]"
               />
             </div>
+          </div>
+
+          {/* Workspace: independent from the task category */}
+          <div>
+            <label className="text-[12px] font-medium text-[#91A8C4] block mb-1">
+              Área / empresa
+            </label>
+            <div className="flex flex-wrap gap-1.5">
+              {WORKSPACES.map((area) => (
+                <button
+                  type="button"
+                  key={area}
+                  onClick={() => setWorkspace(area)}
+                  aria-pressed={workspace === area}
+                  className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+                    workspace === area
+                      ? 'bg-[#299BFF]/20 text-[#299BFF] border-[#299BFF]/40'
+                      : 'bg-[#0D171F] text-[#91A8C4] border-transparent hover:border-[rgba(120,160,190,0.18)]'
+                  }`}
+                >
+                  {area}
+                </button>
+              ))}
+            </div>
+            <p className="text-[11px] text-[#56687C] mt-1">
+              Tarefas antigas permanecem em Geral até você classificá-las.
+            </p>
           </div>
 
           {/* Category */}
