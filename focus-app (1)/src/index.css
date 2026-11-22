@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #05090D;
+    --bg-secondary: #091117;
+    --bg-card: #0B141B;
+    --bg-card-alt: #0D171F;
+    --border-color: rgba(120, 160, 190, 0.14);
+    --blue-primary: #299BFF;
+    --blue-secondary: #6BAEFF;
+    --green-success: #24E4B4;
+    --red-danger: #FF5B64;
+    --yellow-warning: #F5B83D;
+    --text-primary: #F7F9FC;
+    --text-secondary: #91A8C4;
+    --text-muted: #56687C;
+  }
+
+  body {
+    background-color: #05090D;
+    color: #F7F9FC;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    overscroll-behavior-y: none;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+
+/* Safe area support for iOS / mobile */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 16px);
+}

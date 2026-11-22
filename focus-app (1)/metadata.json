@@ -1,0 +1,6 @@
+{
+  "name": "Focus App",
+  "description": "Aplicativo de produtividade mobile-first com planejamento diário, afazeres, hábitos, resumo mensal e foco.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
