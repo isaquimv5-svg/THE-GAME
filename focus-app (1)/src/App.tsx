@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { AppProvider, useApp } from './context/AppContext';
 import { BottomNav } from './components/common/BottomNav';
 import { TodayScreen } from './components/today/TodayScreen';
+import { RoutineScreen } from './components/routine/RoutineScreen';
 import { PlanScreen } from './components/plan/PlanScreen';
 import { TasksScreen } from './components/tasks/TasksScreen';
 import { HabitsScreen } from './components/habits/HabitsScreen';
@@ -36,6 +37,7 @@ const MainContent: React.FC = () => {
           className="w-full"
         >
           {activeTab === 'today' && <TodayScreen />}
+          {activeTab === 'routine' && <RoutineScreen />}
           {activeTab === 'plan' && <PlanScreen />}
           {activeTab === 'tasks' && <TasksScreen />}
           {activeTab === 'habits' && <HabitsScreen />}
