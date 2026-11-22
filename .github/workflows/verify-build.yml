@@ -24,5 +24,8 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Check TypeScript
+        run: npm run lint
+
       - name: Build production app
         run: npm run build

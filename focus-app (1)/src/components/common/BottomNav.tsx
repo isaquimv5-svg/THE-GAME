@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Calendar, CheckSquare, BarChart2, CalendarDays, User } from 'lucide-react';
+import { Home, Calendar, Clock3, CheckSquare, BarChart2, CalendarDays, User } from 'lucide-react';
 import { TabType, useApp } from '../../context/AppContext';
 
 interface NavItem {
@@ -11,6 +11,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { id: 'today', label: 'Hoje', icon: Home, activeColor: '#299BFF' },
+  { id: 'routine', label: 'Rotina', icon: Clock3, activeColor: '#299BFF' },
   { id: 'plan', label: 'Plano', icon: Calendar, activeColor: '#24E4B4' },
   { id: 'tasks', label: 'Tarefas', icon: CheckSquare, activeColor: '#24E4B4' },
   { id: 'habits', label: 'Hábitos', icon: BarChart2, activeColor: '#24E4B4' },
