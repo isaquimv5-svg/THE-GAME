@@ -3,6 +3,7 @@ import { X, Trash2, Calendar, Clock, Tag, Flag, AlertCircle } from 'lucide-react
 import { useApp } from '../../context/AppContext';
 import { PriorityLevel, TaskCategory, TaskWorkspace } from '../../types';
 import { getTodayDateString } from '../../utils/date';
+import { getRoutineBlocksForDate } from '../../utils/routine';
 
 const CATEGORIES: TaskCategory[] = [
   'Trabalho',
@@ -36,6 +37,7 @@ export const TaskModal: React.FC = () => {
   const [date, setDate] = useState(selectedDate || getTodayDateString());
   const [category, setCategory] = useState<TaskCategory>('Trabalho');
   const [workspace, setWorkspace] = useState<TaskWorkspace>('Geral');
+  const [routineBlockId, setRoutineBlockId] = useState('');
   const [priority, setPriority] = useState<PriorityLevel>('Média');
   const [recurring, setRecurring] = useState(false);
   const [isTopPriority, setIsTopPriority] = useState(false);
@@ -48,6 +50,7 @@ export const TaskModal: React.FC = () => {
       setDate(editingTask.date || selectedDate || getTodayDateString());
       setCategory(editingTask.category || 'Trabalho');
       setWorkspace(editingTask.workspace || 'Geral');
+      setRoutineBlockId(editingTask.routineBlockId || '');
       setPriority(editingTask.priority || 'Média');
       setRecurring(!!editingTask.recurring);
       setIsTopPriority(!!editingTask.isTopPriority);
@@ -58,6 +61,7 @@ export const TaskModal: React.FC = () => {
       setDate(selectedDate || getTodayDateString());
       setCategory('Trabalho');
       setWorkspace('Geral');
+      setRoutineBlockId('');
       setPriority('Média');
       setRecurring(false);
       setIsTopPriority(false);
@@ -78,6 +82,7 @@ export const TaskModal: React.FC = () => {
         date,
         category,
         workspace,
+        routineBlockId: routineBlockId || undefined,
         priority,
         recurring,
         isTopPriority,
@@ -91,6 +96,7 @@ export const TaskModal: React.FC = () => {
         completed: false,
         category,
         workspace,
+        routineBlockId: routineBlockId || undefined,
         priority,
         recurring,
         isTopPriority,
@@ -179,7 +185,7 @@ export const TaskModal: React.FC = () => {
               <input
                 type="date"
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
+                onChange={(e) => { setDate(e.target.value); setRoutineBlockId(''); }}
                 className="w-full bg-[#0D171F] border border-[rgba(120,160,190,0.18)] rounded-xl px-3 py-2 text-xs text-[#F7F9FC] focus:outline-none focus:border-[#299BFF]"
               />
             </div>
@@ -195,7 +201,7 @@ export const TaskModal: React.FC = () => {
                 <button
                   type="button"
                   key={area}
-                  onClick={() => setWorkspace(area)}
+                  onClick={() => { setWorkspace(area); setRoutineBlockId(''); }}
                   aria-pressed={workspace === area}
                   className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all border ${
                     workspace === area
@@ -233,6 +239,27 @@ export const TaskModal: React.FC = () => {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Optional routine assignment keeps legacy tasks unassigned */}
+          <div>
+            <label className="text-[12px] font-medium text-[#91A8C4] block mb-1">
+              Bloco da rotina (opcional)
+            </label>
+            <select
+              value={routineBlockId}
+              onChange={(e) => setRoutineBlockId(e.target.value)}
+              className="w-full bg-[#0D171F] border border-[rgba(120,160,190,0.18)] rounded-xl px-3 py-2 text-xs text-[#F7F9FC] focus:outline-none focus:border-[#299BFF]"
+            >
+              <option value="">Tarefa flexível (sem bloco)</option>
+              {getRoutineBlocksForDate(date)
+                .filter((block) => !block.protected)
+                .map((block) => (
+                  <option key={block.id} value={block.id}>
+                    {block.start}–{block.end} · {block.title}
+                  </option>
+                ))}
+            </select>
           </div>
 
           {/* Priority */}
