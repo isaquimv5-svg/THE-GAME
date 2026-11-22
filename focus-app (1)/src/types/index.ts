@@ -17,6 +17,7 @@ export interface Task {
   title: string;
   description: string;
   workspace?: TaskWorkspace;
+  routineBlockId?: string; // Optional time block; old tasks remain unassigned
   date: string; // YYYY-MM-DD
   time: string; // e.g. "08:00", "14:00", "Todo o dia"
   completed: boolean;
