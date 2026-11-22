@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Header } from '../common/Header';
-import { Task, TaskCategory, PriorityLevel } from '../../types';
+import { Task, TaskCategory, PriorityLevel, TaskWorkspace } from '../../types';
 import { getTodayDateString } from '../../utils/date';
 
 export const TasksScreen: React.FC = () => {
@@ -33,10 +33,12 @@ export const TasksScreen: React.FC = () => {
 
   const [filter, setFilter] = useState<'Hoje' | 'Semana' | 'Importantes' | 'Trabalho' | 'Todas'>('Hoje');
   const [activeMenuTaskId, setActiveMenuTaskId] = useState<string | null>(null);
+  const [activeWorkspace, setActiveWorkspace] = useState<TaskWorkspace | 'Todas'>('Todas');
 
   // Filter tasks based on selected pill
   const todayDateStr = getTodayDateString();
   const filteredTasks = tasks.filter((t) => {
+    if (activeWorkspace !== 'Todas' && (t.workspace || 'Geral') !== activeWorkspace) return false;
     if (filter === 'Hoje') return t.date === todayDateStr || t.recurring;
     if (filter === 'Semana') return true;
     if (filter === 'Importantes') return t.isTopPriority || t.priority === 'Alta' || t.important;
@@ -46,8 +48,22 @@ export const TasksScreen: React.FC = () => {
 
   // Top 3 priorities
   const top3Tasks = tasks
-    .filter((t) => t.isTopPriority || t.priority === 'Alta')
+    .filter((t) => (activeWorkspace === 'Todas' || (t.workspace || 'Geral') === activeWorkspace) && (t.isTopPriority || t.priority === 'Alta'))
     .slice(0, 3);
+
+  const WORKSPACE_FILTERS: Array<TaskWorkspace | 'Todas'> = ['Todas', 'GF ATAKAREJO', 'MTR7 Imports', 'Pessoal', 'Geral'];
+
+  const getWorkspaceBadge = (workspace?: TaskWorkspace) => {
+    const area = workspace || 'Geral';
+    const styles = area === 'GF ATAKAREJO'
+      ? 'bg-[#299BFF]/10 text-[#6BAEFF] border-[#299BFF]/20'
+      : area === 'MTR7 Imports'
+      ? 'bg-[#A78BFA]/10 text-[#B5A1FF] border-[#A78BFA]/20'
+      : area === 'Pessoal'
+      ? 'bg-[#24E4B4]/10 text-[#24E4B4] border-[#24E4B4]/20'
+      : 'bg-[#152330] text-[#91A8C4] border-[rgba(120,160,190,0.14)]';
+    return <span className={`inline-flex shrink-0 rounded-md border px-2 py-0.5 text-[10px] font-medium ${styles}`}>{area}</span>;
+  };
 
   const getPriorityBadge = (priority: PriorityLevel) => {
     if (priority === 'Alta') {
@@ -169,6 +185,25 @@ export const TasksScreen: React.FC = () => {
         </button>
       </div>
 
+      {/* Area filters — existing task categories are kept independent */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" role="group" aria-label="Filtrar por empresa ou área">
+        {WORKSPACE_FILTERS.map((area) => (
+          <button
+            key={area}
+            type="button"
+            aria-pressed={activeWorkspace === area}
+            onClick={() => setActiveWorkspace(area)}
+            className={`px-3 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap border transition-all ${
+              activeWorkspace === area
+                ? 'bg-[#299BFF]/20 text-[#6BAEFF] border-[#299BFF]/40'
+                : 'bg-[#0B141B] text-[#91A8C4] border-[rgba(120,160,190,0.18)] hover:bg-[#111F2A]'
+            }`}
+          >
+            {area}
+          </button>
+        ))}
+      </div>
+
       {/* Card: Top 3 prioridades */}
       <div className="rounded-[20px] bg-[#0B141B] border border-[rgba(120,160,190,0.14)] p-4 shadow-sm">
         <div className="flex items-center justify-between mb-3.5">
@@ -267,8 +302,9 @@ export const TasksScreen: React.FC = () => {
                       {task.title}
                     </h4>
 
-                    <div className="mt-1 flex items-center gap-2">
+                    <div className="mt-1 flex items-center gap-1.5 flex-wrap">
                       {getCategoryBadge(task.category)}
+                      {getWorkspaceBadge(task.workspace)}
                     </div>
                   </div>
                 </div>
