@@ -1,0 +1,9 @@
+# Build the existing Google AI Studio export without moving application files.
+# Link THIS GitHub repository to the existing Netlify site, not a new site.
+[build]
+  base = "focus-app (1)"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22.16.0"
