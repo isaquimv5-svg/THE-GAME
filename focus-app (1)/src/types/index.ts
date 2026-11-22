@@ -1,5 +1,8 @@
 export type PriorityLevel = 'Alta' | 'Média' | 'Baixa';
 
+// Optional so previously saved tasks remain readable without migration.
+export type TaskWorkspace = 'Geral' | 'GF ATAKAREJO' | 'MTR7 Imports' | 'Pessoal';
+
 export type TaskCategory = 
   | 'Trabalho' 
   | 'Saúde' 
@@ -13,6 +16,7 @@ export interface Task {
   id: string;
   title: string;
   description: string;
+  workspace?: TaskWorkspace;
   date: string; // YYYY-MM-DD
   time: string; // e.g. "08:00", "14:00", "Todo o dia"
   completed: boolean;
